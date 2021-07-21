@@ -5,6 +5,7 @@ Module Docstring
 import os
 import sys
 import datetime
+from collections import defaultdict
 
 __author__ = "Steven Nguyen"
 __version__ = "0.1.0"
@@ -30,9 +31,13 @@ def getFileDT(files):
     return dates
 
 def rename(path, files, dates):
+    duplicates = defaultdict(int)
     for i in range(len(files)):
         _, ext = os.path.splitext(files[i])
         name = os.path.join(path, dates[i] + ext)
+        if os.path.exists(name):
+            duplicates[dates[i]] += 1
+            name = os.path.join(path, dates[i] + '-' + str(duplicates[dates[i]]) + ext)
         os.rename(files[i], name)
 
 def main(args):
